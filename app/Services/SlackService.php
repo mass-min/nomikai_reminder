@@ -19,8 +19,12 @@ class SlackService
         echo json_encode($response->json());
     }
 
-    public function tweetOnlineMtgInfo(string $tweet)
+    public function tweetOnlineMtgInfo(array $tweet)
     {
-        echo $tweet . "\n";
+        $response = Http::asForm()->post('https://slack.com/api/chat.postMessage', [
+            'channel' => 'G011N7D2TD0',
+            'token' => env('SLACK_BOT_ACCESSTOKEN'),
+            'text' => $tweet['text'],
+        ]);
     }
 }

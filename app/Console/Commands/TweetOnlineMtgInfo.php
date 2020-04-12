@@ -52,7 +52,7 @@ class TweetOnlineMtgInfo extends Command
 
         foreach($tweets as $tweet) {
             $twitterService->tweetOnlineMtgInfo($tweet);
-            $slackService->tweetOnlineMtgInfo($tweet['text']);
+            $slackService->tweetOnlineMtgInfo($tweet);
         }
         PostedTweet::create(['tweet_id' => $tweets[count($tweets) - 1]['id']]);;
     }
