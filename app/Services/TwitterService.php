@@ -22,7 +22,7 @@ class TwitterService
     /**
      * @return array
      */
-    public function getTweetOfSkypeMtg($tweetsMtg): array
+    public function getTweetOfSkypeMtg(): array
     {
         $result = $this->twitter->get("search/tweets", [
             "q" => "\"join.skype\"",
@@ -32,23 +32,13 @@ class TwitterService
             "result_type" => "recent",
         ]);
 
-        $tweetSkypeTexts = [];
-        foreach ($result as $tweets) {
-            foreach ($tweets as $tweet) {
-                if (!isset($tweet->text) || !isset($tweet->entities->urls[0])) {
-                    continue;
-                }
-                $tweetSkypeTexts[] = $tweet->text . "\n" . $tweet->entities->urls[0]->expanded_url . "\n";
-            }
-        }
-        $tweetTexts = array_merge($tweetsMtg, $tweetSkypeTexts);
-        return $tweetTexts;
+        return $this->getTweetContents($result);
     }
 
     /**
      * @return array
      */
-    public function getTweetOfOnlineMtg(): array
+    public function getTweetOfZoomMtg(): array
     {
         $result = $this->twitter->get("search/tweets", [
             "q" => '"zoom.us" -from:ExplorerMeeting',
@@ -58,6 +48,16 @@ class TwitterService
             "result_type" => "recent",
         ]);
 
+        return $this->getTweetContents($result);
+    }
+
+
+    /**
+     * @param $result
+     * @return array
+     */
+    public function getTweetContents($result): array
+    {
         $tweetContents = [];
         foreach ($result as $tweets) {
             foreach ($tweets as $tweet) {
