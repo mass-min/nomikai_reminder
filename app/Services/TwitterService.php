@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\PostedTweet;
 
 class TwitterService
 {
@@ -50,35 +51,47 @@ class TwitterService
     public function getTweetOfOnlineMtg(): array
     {
         $result = $this->twitter->get("search/tweets", [
-            "q" => "\"zoom.us\"",
+            "q" => '"zoom.us" -from:ExplorerMeeting',
             "lang" => "ja",
-            "count" => 5,
+            "count" => 20,
             "URL" => "https://zoom.us",
             "result_type" => "recent",
         ]);
 
-        $tweetTexts = [];
+        $tweetContents = [];
         foreach ($result as $tweets) {
             foreach ($tweets as $tweet) {
                 if (!isset($tweet->text) || !isset($tweet->entities->urls[0])) {
                     continue;
                 }
-                $tweetTexts[] = $tweet->text . "\n" . $tweet->entities->urls[0]->expanded_url . "\n";
+                $tweetContents[] = [
+                    'id' => $tweet->id,
+                    'text' => $tweet->text . "\n" . $tweet->entities->urls[0]->expanded_url . "\n",
+                    'user_screen_name' => $tweet->user->screen_name,
+                ];
             }
         }
-        return $tweetTexts;
+        return $tweetContents;
     }
 
     /**
-     * @param string $tweet
+     * @param array $tweet
      * @return array|object
      */
-    public function tweetOnlineMtgInfo(string $tweet)
+    public function tweetOnlineMtgInfo(array $tweet)
     {
         // ツイート文言
-        $text = "こんなオンラインMTGを発見しました！\n" . $tweet;
+        $text = "こんなオンラインMTGを発見しました！\n"
+            . "参加している方: " . $tweet['user_screen_name'] . "\n"
+            . $tweet['text'];
 
         //ツイートする
-        return $this->twitter->post("statuses/update", ['status' => $text]);
+        try {
+            $result = $this->twitter->post("statuses/update", ['status' => $text]);
+            PostedTweet::create(['tweet_id' => $tweet['id']]);
+            return $result;
+        } catch (\Exception $e) {
+            var_dump($e->getLine(), $e->getMessage());
+        }
     }
 }

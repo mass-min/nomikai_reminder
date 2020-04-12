@@ -46,7 +46,7 @@ class TweetOnlineMtgInfo extends Command
 
         foreach($tweets as $tweet) {
             $twitterService->tweetOnlineMtgInfo($tweet);
-            $slackService->tweetOnlineMtgInfo($tweet);
+            $slackService->tweetOnlineMtgInfo($tweet['text']);
         }
     }
 }
