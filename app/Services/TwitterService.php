@@ -23,27 +23,36 @@ class TwitterService
      */
     public function getTweetOfOnlineMtg(): array
     {
-        // $result = $this->twitter->get("search/tweets", ["q" => "zoom.us"]);
-        // dd($result);
-        return [
-            "オンラインMTGの情報1",
-            "オンラインMTGの情報2",
-            "オンラインMTGの情報3",
-        ];
+        $result = $this->twitter->get("search/tweets", [
+            "q" => "\"zoom.us\"",
+            "lang" => "ja",
+            "count" => 5,
+            "URL" => "https://zoom.us",
+            "result_type" => "recent",
+        ]);
+
+        $tweetTexts = [];
+        foreach ($result as $tweets) {
+            foreach ($tweets as $tweet) {
+                if (!isset($tweet->text) || !isset($tweet->entities->urls[0])) {
+                    continue;
+                }
+                $tweetTexts[] = $tweet->text . "\n" . $tweet->entities->urls[0]->expanded_url . "\n";
+            }
+        }
+        return $tweetTexts;
     }
 
     /**
      * @param string $tweet
+     * @return array|object
      */
     public function tweetOnlineMtgInfo(string $tweet)
     {
         // ツイート文言
-        echo $tweet . "\n";
+        $text = "こんなオンラインMTGを発見しました！\n" . $tweet;
 
         //ツイートする
-        $result = $this->twitter->post("statuses/update", ['status' => $tweet] );
-        
-        return $result;
-
+        return $this->twitter->post("statuses/update", ['status' => $text]);
     }
 }
