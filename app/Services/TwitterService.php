@@ -32,7 +32,7 @@ class TwitterService
                 "count" => 5,
                 "URL" => "https://join.skype",
                 "result_type" => "recent",
-                "since_id" => $latestPostedTweet->id,
+                "since_id" => (int)$latestPostedTweet->id + 1,
             ]);
         } else {
             $result = $this->twitter->get("search/tweets", [
@@ -60,7 +60,7 @@ class TwitterService
                 "count" => 20,
                 "URL" => "https://zoom.us",
                 "result_type" => "recent",
-                "since_id" => $latestPostedTweet->id,
+                "since_id" => (int)$latestPostedTweet->id + 1,
             ]);
         } else {
             $result = $this->twitter->get("search/tweets", [
