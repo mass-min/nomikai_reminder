@@ -21,6 +21,32 @@ class TwitterService
     /**
      * @return array
      */
+    public function getTweetOfSkypeMtg($tweetsMtg): array
+    {
+        $result = $this->twitter->get("search/tweets", [
+            "q" => "\"join.skype\"",
+            "lang" => "ja",
+            "count" => 5,
+            "URL" => "https://join.skype",
+            "result_type" => "recent",
+        ]);
+
+        $tweetSkypeTexts = [];
+        foreach ($result as $tweets) {
+            foreach ($tweets as $tweet) {
+                if (!isset($tweet->text) || !isset($tweet->entities->urls[0])) {
+                    continue;
+                }
+                $tweetSkypeTexts[] = $tweet->text . "\n" . $tweet->entities->urls[0]->expanded_url . "\n";
+            }
+        }
+        $tweetTexts = array_merge($tweetsMtg, $tweetSkypeTexts);
+        return $tweetTexts;
+    }
+
+    /**
+     * @return array
+     */
     public function getTweetOfOnlineMtg(): array
     {
         $result = $this->twitter->get("search/tweets", [

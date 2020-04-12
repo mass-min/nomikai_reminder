@@ -41,7 +41,8 @@ class TweetOnlineMtgInfo extends Command
     {
         $slackService = new SlackService();
         $twitterService = new TwitterService();
-        $tweets = $twitterService->getTweetOfOnlineMtg();
+        $tweetsMtg = $twitterService->getTweetOfOnlineMtg();
+        $tweets = $twitterService->getTweetOfSkypeMtg($tweetsMtg);
 
         foreach($tweets as $tweet) {
             $twitterService->tweetOnlineMtgInfo($tweet);
