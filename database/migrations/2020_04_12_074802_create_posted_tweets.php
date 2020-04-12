@@ -15,7 +15,7 @@ class CreatePostedTweets extends Migration
     {
         Schema::create('posted_tweets', function (Blueprint $table) {
             $table->id();
-            $table->integer('tweet_id')->index()->unique();
+            $table->string('tweet_id')->index()->unique();
             $table->timestamps();
         });
     }

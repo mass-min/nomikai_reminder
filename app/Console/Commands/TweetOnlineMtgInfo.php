@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\PostedTweet;
 use App\Services\TwitterService;
 use App\Services\SlackService;
 use Illuminate\Console\Command;
@@ -49,5 +50,6 @@ class TweetOnlineMtgInfo extends Command
             $twitterService->tweetOnlineMtgInfo($tweet);
             $slackService->tweetOnlineMtgInfo($tweet['text']);
         }
+        PostedTweet::create(['tweet_id' => $tweets[count($tweets) - 1]['id']]);;
     }
 }

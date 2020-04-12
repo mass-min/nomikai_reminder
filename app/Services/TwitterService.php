@@ -87,9 +87,7 @@ class TwitterService
 
         //ツイートする
         try {
-            $result = $this->twitter->post("statuses/update", ['status' => $text]);
-            PostedTweet::create(['tweet_id' => $tweet['id']]);
-            return $result;
+            return $this->twitter->post("statuses/update", ['status' => $text]);
         } catch (\Exception $e) {
             var_dump($e->getLine(), $e->getMessage());
         }
