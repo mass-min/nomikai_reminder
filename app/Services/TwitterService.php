@@ -23,14 +23,12 @@ class TwitterService
      */
     public function getTweetOfOnlineMtg(): array
     {
-        $result = $this->twitter->get("search/tweets", ["q" => "zoom.us"]);
-        dd($result);
+        // $result = $this->twitter->get("search/tweets", ["q" => "zoom.us"]);
+        // dd($result);
         return [
             "オンラインMTGの情報1",
             "オンラインMTGの情報2",
             "オンラインMTGの情報3",
-            "オンラインMTGの情報4",
-            "オンラインMTGの情報5",
         ];
     }
 
@@ -39,7 +37,13 @@ class TwitterService
      */
     public function tweetOnlineMtgInfo(string $tweet)
     {
-        // ツイートする
+        // ツイート文言
         echo $tweet . "\n";
+
+        //ツイートする
+        $result = $this->twitter->post("statuses/update", ['status' => $tweet] );
+        
+        return $result;
+
     }
 }
