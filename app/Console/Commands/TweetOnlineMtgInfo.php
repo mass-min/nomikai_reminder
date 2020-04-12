@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\TwitterService;
+use App\Services\SlackService;
 use Illuminate\Console\Command;
 
 class TweetOnlineMtgInfo extends Command
@@ -38,11 +39,13 @@ class TweetOnlineMtgInfo extends Command
      */
     public function handle()
     {
+        $slackService = new SlackService();
         $twitterService = new TwitterService();
         $tweets = $twitterService->getTweetOfOnlineMtg();
 
         foreach($tweets as $tweet) {
             $twitterService->tweetOnlineMtgInfo($tweet);
+            $slackService->tweetOnlineMtgInfo($tweet);
         }
     }
 }
