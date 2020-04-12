@@ -23,8 +23,8 @@ class TwitterService
      */
     public function getTweetOfOnlineMtg(): array
     {
-        // オンラインMTGのURLを含むツイートを取得してくる
-        $this->twitter->post("statuses/update", ["status" => "hello world"]);
+        $result = $this->twitter->get("search/tweets", ["q" => "zoom.us"]);
+        dd($result);
         return [
             "オンラインMTGの情報1",
             "オンラインMTGの情報2",
