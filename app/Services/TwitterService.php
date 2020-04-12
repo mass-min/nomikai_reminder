@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use App\PostedTweet;
 
 class TwitterService
 {
