@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\PostedTweet;
 
 class TwitterService
 {
@@ -19,33 +20,57 @@ class TwitterService
     }
 
     /**
+     * @param PostedTweet|null $latestPostedTweet
      * @return array
      */
-    public function getTweetOfSkypeMtg(): array
+    public function getTweetOfSkypeMtg(PostedTweet $latestPostedTweet = null): array
     {
-        $result = $this->twitter->get("search/tweets", [
-            "q" => "\"join.skype\"",
-            "lang" => "ja",
-            "count" => 5,
-            "URL" => "https://join.skype",
-            "result_type" => "recent",
-        ]);
+        if (isset($latestPostedTweet)) {
+            $result = $this->twitter->get("search/tweets", [
+                "q" => "\"join.skype\"",
+                "lang" => "ja",
+                "count" => 5,
+                "URL" => "https://join.skype",
+                "result_type" => "recent",
+                "since_id" => $latestPostedTweet->id,
+            ]);
+        } else {
+            $result = $this->twitter->get("search/tweets", [
+                "q" => "\"join.skype\"",
+                "lang" => "ja",
+                "count" => 5,
+                "URL" => "https://join.skype",
+                "result_type" => "recent",
+            ]);
+        }
 
         return $this->getTweetContents($result);
     }
 
     /**
+     * @param PostedTweet|null $latestPostedTweet
      * @return array
      */
-    public function getTweetOfZoomMtg(): array
+    public function getTweetOfZoomMtg(PostedTweet $latestPostedTweet = null): array
     {
-        $result = $this->twitter->get("search/tweets", [
-            "q" => '"zoom.us" -from:ExplorerMeeting',
-            "lang" => "ja",
-            "count" => 20,
-            "URL" => "https://zoom.us",
-            "result_type" => "recent",
-        ]);
+        if (isset($latestPostedTweet)) {
+            $result = $this->twitter->get("search/tweets", [
+                "q" => '"zoom.us" -from:ExplorerMeeting',
+                "lang" => "ja",
+                "count" => 20,
+                "URL" => "https://zoom.us",
+                "result_type" => "recent",
+                "since_id" => $latestPostedTweet->id,
+            ]);
+        } else {
+            $result = $this->twitter->get("search/tweets", [
+                "q" => '"zoom.us" -from:ExplorerMeeting',
+                "lang" => "ja",
+                "count" => 20,
+                "URL" => "https://zoom.us",
+                "result_type" => "recent",
+            ]);
+        }
 
         return $this->getTweetContents($result);
     }

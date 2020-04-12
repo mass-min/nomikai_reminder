@@ -42,8 +42,12 @@ class TweetOnlineMtgInfo extends Command
     {
         $slackService = new SlackService();
         $twitterService = new TwitterService();
-        $zoomTweets = $twitterService->getTweetOfZoomMtg();
-        $skypeTweets = $twitterService->getTweetOfSkypeMtg();
+        $latestPostedTweet = null;
+        if (PostedTweet::all()->count() > 0) {
+            $latestPostedTweet = PostedTweet::orderBy('tweet_id', 'DESC')->first();
+        }
+        $zoomTweets = $twitterService->getTweetOfZoomMtg($latestPostedTweet);
+        $skypeTweets = $twitterService->getTweetOfSkypeMtg($latestPostedTweet);
         $tweets = array_merge($zoomTweets, $skypeTweets);
 
         foreach($tweets as $tweet) {
